@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Pr Pro-Skills - Login/Sign Up</title>
+  <style>
+    body {
+      background-color: #181818; /* Dark blue background */
+      color: white;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      background-color: #282828; /* Slightly lighter dark blue */
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    h1 {
+      color: #ffc107; /* Yellow heading */
+      margin-bottom: 20px;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+      margin-bottom: 15px;
+      background-color: #383838; /* Dark gray input background */
+      color: white;
+    }
+
+    button {
+      background-color: #ffc107; /* Yellow button */
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+      opacity: 0.8;
+    }
+
+    a {
+      color: #ffc107; /* Yellow link color */
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Pr Pro-Skills</h1>
+
+    <div class="login-form">
+      <h2>Login</h2>
+      <form>
+        <input type="text" placeholder="Username" required>
+        <input type="password" placeholder="Password" required>
+        <button type="submit">Sign In</button>
+      </form>
+      <p>Don't have an account? <a href="#signup">Sign Up</a></p>
+    </div>
+
+    <div class="signup-form" id="signup" style="margin-top: 40px;">
+      <h2>Sign Up</h2>
+      <form>
+        <input type="text" placeholder="Username" required>
+        <input type="password" placeholder="Password" required>
+        <button type="submit">Create Account</button>
+      </form>
+      <p>Already have an account? <a href="#login">Login</a></p>
+    </div>
+  </div>
+
+  <script>
+    // JavaScript for form handling can be added here
+    document.querySelector('.login-form form').addEventListener('submit', function(event) {
+      event.preventDefault();
+      alert('Login functionality to be implemented');
+    });
+
+    document.querySelector('.signup-form form').addEventListener('submit', function(event) {
+      event.preventDefault();
+      alert('Sign Up functionality to be implemented');
+    });
+  </script>
+</body>
+</html> 

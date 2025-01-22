@@ -1,0 +1,127 @@
+// Users Table
+Table users {
+  user_id integer [primary key]
+  username varchar [unique]
+  password varchar
+  email varchar [unique]
+  phone_number varchar
+  user_type varchar
+  registration_date timestamp
+}
+
+// Courses Table
+Table courses {
+  course_id integer [primary key]
+  course_name varchar
+  description text
+  instructor_id integer [ref: > users.user_id]
+  price decimal
+  duration varchar
+  category varchar
+  created_date timestamp
+}
+
+// Enrollments Table
+Table enrollments {
+  enrollment_id integer [primary key]
+  user_id integer [ref: > users.user_id]
+  course_id integer [ref: > courses.course_id]
+  enrollment_date timestamp
+  progress decimal
+  status varchar
+}
+
+// Lessons Table
+Table lessons {
+  lesson_id integer [primary key]
+  course_id integer [ref: > courses.course_id]
+  lesson_title varchar
+  content text
+  sequence integer
+}
+
+// Assignments Table
+Table assignments {
+  assignment_id integer [primary key]
+  course_id integer [ref: > courses.course_id]
+  title varchar
+  description text
+  due_date timestamp
+  max_marks integer
+}
+
+// Submissions Table
+Table submissions {
+  submission_id integer [primary key]
+  assignment_id integer [ref: > assignments.assignment_id]
+  user_id integer [ref: > users.user_id]
+  submission_date timestamp
+  file_path varchar
+  marks_awarded integer
+}
+
+// Reviews Table
+Table reviews {
+  review_id integer [primary key]
+  user_id integer [ref: > users.user_id]
+  course_id integer [ref: > courses.course_id]
+  rating integer
+  review_text text
+  review_date timestamp
+}
+
+// Payments Table
+Table payments {
+  payment_id integer [primary key]
+  user_id integer [ref: > users.user_id]
+  course_id integer [ref: > courses.course_id]
+  amount decimal
+  payment_date timestamp
+  payment_status varchar
+}
+
+// Categories Table
+Table categories {
+  category_id integer [primary key]
+  category_name varchar
+}
+
+// Notifications Table
+Table notifications {
+  notification_id integer [primary key]
+  user_id integer [ref: > users.user_id]
+  message text
+  created_date timestamp
+  status varchar
+}
+
+// Forums Table
+Table forums {
+  forum_id integer [primary key]
+  course_id integer [ref: > courses.course_id]
+  title varchar
+  created_date timestamp
+}
+
+// Forum Posts Table
+Table forum_posts {
+  post_id integer [primary key]
+  forum_id integer [ref: > forums.forum_id]
+  user_id integer [ref: > users.user_id]
+  post_content text
+  post_date timestamp
+}
+
+// Subjects Table
+Table subjects {
+  subject_id integer [primary key]
+  subject_name varchar [unique]
+  description text
+}
+
+// Course Subjects Table
+Table course_subjects {
+  id integer [primary key]
+  course_id integer [ref: > courses.course_id]
+  subject_id integer [ref: > subjects.subject_id]
+}
