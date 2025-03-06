@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pro-Skills</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #0c0f1a;
+            color: white;
+            text-align: center;
+        }
+        header {
+            background: #11152b;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #f4a51c;
+        }
+        nav ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+        }
+        nav ul li {
+            margin: 0 15px;
+        }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .hero {
+            padding: 80px 20px;
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.1)), url('C:/Users/HarshitaRR/Desktop/Dbms_Project/Front-end/banner.png') no-repeat center center/cover; /* Add a background image */
+            color: white;
+        }
+        .hero-content {
+            max-width: 800px; /* Limit the width of the content */
+            margin: 0 auto; /* Center the content */
+            text-align: center; /* Center the text */
+        }
+        .hero h1 {
+            font-size: 48px; /* Increased font size */
+            font-weight: bold;
+            margin-bottom: 20px; /* Space below the heading */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Text shadow for depth */
+        }
+        .hero input {
+            padding: 10px;
+            width: 60%; /* Increased width */
+            font-size: 16px;
+            border-radius: 5px;
+            border: none;
+            outline: none;
+            margin-bottom: 20px; /* Space below the input */
+        }
+        .cta-button {
+            display: inline-block; /* Make it a block element */
+            padding: 10px 20px; /* Padding for the button */
+            background-color: #f4a51c; /* Button color */
+            color: #11152b; /* Text color */
+            text-decoration: none; /* Remove underline */
+            font-weight: bold; /* Bold text */
+            border-radius: 5px; /* Rounded corners */
+            transition: background-color 0.3s ease; /* Transition for hover effect */
+        }
+        .cta-button:hover {
+            background-color: #d4931a; /* Darker shade on hover */
+        }
+        .courses {
+            padding: 50px;
+        }
+        .course-list {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .course {
+            background: #1c2140;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+            width: 350px; /* Increased width */
+            height: 350px; /* Increased height */
+            border-radius: 10px;
+            text-align: left;
+            outline: 5px solid #f4a51c; /* Yellow outline */
+            margin: 10px; /* Margin for spacing */
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease; /* Added transition */
+        }
+        .course:hover {
+            transform: scale(1.05); /* Scale effect */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5); /* Enhanced shadow on hover */
+            background: #2a2e4b; /* Slightly lighter background on hover */
+        }
+        .course img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+        .course h3 {
+            color: #f4a51c;
+            margin: 10px 0; /* Added margin for spacing */
+        }
+        .course p {
+            margin: 0; /* Reset margin for paragraph */
+        }
+        .other-courses {
+            padding: 50px;
+            background: #11152b;
+        }
+        .other-course-list {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        .other-course {
+            background: #1c2140;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            width: 400px; /* Increased width */
+            height: 400px; /* Increased height */
+            border-radius: 15px;
+            border: 2px solid #f4a51c; /* Yellow border */
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease; /* Added transition */
+        }
+        .other-course:hover {
+            transform: scale(1.05); /* Zoom effect */
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5); /* Enhanced shadow on hover */
+        }
+        .other-course img {
+            border-radius: 15px;
+            width: 100%; /* Ensure image fits the box */
+            height: auto; /* Maintain aspect ratio */
+            transition: none; /* No transition on image hover */
+        }
+        .other-course h3 {
+            color: #f4a51c;
+            font-size: 24px; /* Increased font size for course title */
+            margin: 10px 0; /* Margin for spacing */
+        }
+        .other-course p {
+            font-size: 18px; /* Increased font size for course description */
+            color: white; /* Ensure text is visible */
+            margin-top: 10px; /* Added margin for spacing */
+        }
+        footer {
+            background: #11152b;
+            color: white;
+            padding: 10px;
+            margin-top: 20px;
+        }
+        .hidden {
+            display: none;
+        }
+        .course-box {
+            transition: transform 0.3s ease-in-out;
+        }
+        .course-box:hover {
+            transform: scale(1.05);
+        }
+        /* New styles for headings */
+        h2 {
+            font-size: 36px; /* Increased font size */
+            color: #f4a51c; /* Yellow color */
+            margin: 20px 0; /* Margin for spacing */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Text shadow for depth */
+            font-weight: bold; /* Bold text */
+            padding: 25px;
+        }
+        h3 {
+            font-size: 25px;
+            color: #f4a51c;
+            padding-top: 16px;
+        }
+        p {
+            font-size: 17px;
+            color: white;
+            padding: 6px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">Pr <span style="color: #f4a51c;">Pro-Skills</span></div>
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">About Us</a></li>
+                <li><a href="#">Courses</a></li>
+                <li><a href="#">Reviews</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <section class="hero">
+        <div class="hero-content">
+            <h1>
+                Learn a <span style="color: #f4a51c; text-decoration: underline;">New Skill</span> 
+                <br> 
+                Everyday, Anytime, and Anywhere.
+            </h1>
+            <input type="text" id="searchBox" placeholder="Search for courses...">
+            <a href="#" class="cta-button">Explore Courses</a>
+        </div>
+    </section>
+    
+    <section class="courses">
+        <h2>Popular Courses</h2>
+        <div class="course-list">
+            <div class="course" data-name="Full Stack Development">
+                <img src="fs.webp" alt="Full Stack">
+                <h3>Full Stack Development</h3>
+                <p>Build complete web applications.</p>
+            </div>
+            <div class="course" data-name="JavaScript Essentials">
+                <img src="js.webp" alt="JavaScript">
+                <h3>JavaScript Essentials</h3>
+                <p>Master JavaScript for dynamic web pages.</p>
+            </div>
+            <div class="course" data-name="HTML & CSS Basics">
+                <img src="htmlcss.jpeg" alt="HTML & CSS">
+                <h3>HTML & CSS Basics</h3>
+                <p>Learn the foundations of web development.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="other-courses">
+        <h2>Explore Other Courses</h2>
+        <div class="other-course-list">
+            <div class="other-course" data-name="Computer Science">
+                <img src="C:\Users\HarshitaRR\Desktop\Dbms_Project\Front-end\1.png" alt="Computer Science">
+                <h3>Computer Science</h3>
+                <p>Learn the fundamentals of computer science.</p>
+            </div>
+            <div class="other-course" data-name="Data Science & AI">
+                <img src="C:\Users\HarshitaRR\Desktop\Dbms_Project\Front-end\2.jpg" alt="Data Science">
+                <h3>Data Science & AI</h3>
+                <p>Explore data analysis and machine learning.</p>
+            </div>
+            <div class="other-course" data-name="Web & Mobile Development">
+                <img src="C:\Users\HarshitaRR\Desktop\Dbms_Project\Front-end\3.png" alt="Web Dev">
+                <h3>Web & Mobile Dev</h3>
+                <p>Build applications for web and mobile platforms.</p>
+            </div>
+            <div class="other-course" data-name="Cybersecurity & Cloud Computing">
+                <img src="C:\Users\HarshitaRR\Desktop\Dbms_Project\Front-end\4.jpeg" alt="Cybersecurity">
+                <h3>Cybersecurity</h3>
+                <p>Protect systems and networks from cyber threats.</p>
+            </div>
+            <div class="other-course" data-name="Marketing & E-Commerce">
+                <img src="C:\Users\HarshitaRR\Desktop\Dbms_Project\Front-end\5.webp" alt="Marketing">
+                <h3>Marketing</h3>
+                <p>Learn strategies for effective marketing.</p>
+            </div>
+            <div class="other-course" data-name="Design & Art">
+                <img src="C:\Users\HarshitaRR\Desktop\Dbms_Project\Front-end\6.jpg" alt="Design & Art">
+                <h3>Design & Art</h3>
+                <p>Explore creativity in design and art.</p>
+            </div>
+            <div class="other-course" data-name="Finance & Business">
+                <img src="C:\Users\HarshitaRR\Desktop\Dbms_Project\Front-end\7.jpg" alt="Finance">
+                <h3>Finance & Business</h3>
+                <p>Understand financial principles and business strategies.</p>
+            </div>
+            <div class="other-course" data-name="Management & Project Planning">
+                <img src="C:\Users\HarshitaRR\Desktop\Dbms_Project\Front-end\8.jpg" alt="Management">
+                <h3>Management</h3>
+                <p>Learn effective management techniques.</p>
+            </div>
+            <div class="other-course" data-name="Writing & Communication">
+                <img src="C:\Users\HarshitaRR\Desktop\Dbms_Project\Front-end\9.webp" alt="Writing">
+                <h3>Writing & Communication</h3>
+                <p>Enhance your writing and communication skills.</p>
+            </div>
+            <div class="other-course" data-name="Game & Robotics Development">
+                <img src="C:\Users\HarshitaRR\Desktop\Dbms_Project\Front-end\10.jpeg" alt="Gaming">
+                <h3>Game & Robotics Dev</h3>
+                <p>Develop games and robotics applications.</p>
+            </div>
+            <div class="other-course" data-name="Database & SQL">
+                <img src="C:\Users\HarshitaRR\Desktop\Dbms_Project\Front-end\11.png" alt="Database">
+                <h3>Database & SQL</h3>
+                <p>Learn database management and SQL.</p>
+            </div>
+            <div class="other-course" data-name="Blockchain">
+                <img src="C:\Users\HarshitaRR\Desktop\Dbms_Project\Front-end\12.webp" alt="Blockchain">
+                <h3>Blockchain</h3>
+                <p>Understand blockchain technology and its applications.</p>
+            </div>
+            <div class="other-course" data-name="Economics & Political Science">
+                <img src="C:\Users\HarshitaRR\Desktop\Dbms_Project\Front-end\13.jpg" alt="Economics">
+                <h3>Economics & Politics</h3>
+                <p>Explore the intersection of economics and politics.</p>
+            </div>
+            <div class="other-course" data-name="Science & Environment">
+                <img src="C:\Users\HarshitaRR\Desktop\Dbms_Project\Front-end\14.jpeg" alt="Science">
+                <h3>Science & Environment</h3>
+                <p>Learn about environmental science and sustainability.</p>
+            </div>
+            <div class="other-course" data-name="Social Sciences & Humanities">
+                <img src="C:\Users\HarshitaRR\Desktop\Dbms_Project\Front-end\15.gif" alt="Social Sciences">
+                <h3>Social Sciences</h3>
+                <p>Study human behavior and societies.</p>
+            </div>
+            <div class="other-course" data-name="Music">
+                <img src="C:\Users\HarshitaRR\Desktop\Dbms_Project\Front-end\16.jpeg" alt="Music">
+                <h3>Music</h3>
+                <p>Explore music theory and composition.</p>
+            </div>
+        </div>
+    </section>
+    
+    <footer>
+        <p>&copy; 2025 Pro-Skills. All rights reserved.</p>
+    </footer>
+    
+    <script>
+        document.getElementById("searchBox").addEventListener("keyup", function () {
+            let filter = this.value.toLowerCase();
+            let courses = document.querySelectorAll(".course, .other-course");
+
+            courses.forEach(course => {
+                let name = course.dataset.name.toLowerCase();
+                course.classList.toggle("hidden", !name.includes(filter));
+            });
+        });
+    </script>
+</body>
+</html>

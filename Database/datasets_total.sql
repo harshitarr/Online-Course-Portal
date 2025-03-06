@@ -698,3 +698,6 @@ INSERT INTO Course_Subjects (course_id, subject_id) VALUES
 (8, 9),  -- Cloud Computing with Digital Marketing
 (9, 10); -- Digital Marketing with Graphic Design
 
+
+select * from Course_Subjects
+
