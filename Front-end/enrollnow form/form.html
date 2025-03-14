@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enroll Now - Pro-Skills</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #0c0f1a, #1c2140);
+            color: white;
+            text-align: center;
+        }
+        header {
+            background: #11152b;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #f4a51c;
+        }
+        nav ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+        }
+        nav ul li {
+            margin: 0 20px;
+        }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 8px 12px;
+            transition: background-color 0.3s ease;
+            border-radius: 5px;
+        }
+        nav ul li a:hover {
+            background-color: rgba(244, 165, 28, 0.3);
+        }
+        .form-container {
+            background: #1c2140;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            max-width: 600px;
+            margin: 50px auto;
+            position: relative;
+            overflow: hidden;
+        }
+        h2 {
+            color: #f4a51c;
+            margin-bottom: 20px;
+            font-size: 32px;
+        }
+        .form-step {
+            display: none;
+        }
+        .form-step.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            background: #2a2e4b;
+            color: white;
+            transition: background-color 0.3s ease;
+            font-size: 16px;
+        }
+        input:focus, select:focus, textarea:focus {
+            background: #3a3e5b;
+            outline: none;
+        }
+        .button {
+            background-color: #f4a51c;
+            color: #11152b;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin: 10px 5px;
+            font-size: 16px;
+        }
+        .button:hover {
+            background-color: #d4931a;
+            transform: scale(1.05);
+        }
+        .confirmation {
+            display: none;
+            margin-top: 20px;
+            color: #f4a51c;
+            animation: fadeIn 0.5s;
+        }
+        .error {
+            color: red;
+            margin: 10px 0;
+            display: none;
+        }
+        /* Popup Styles */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.5);
+            background: #1c2140;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            opacity: 0;
+            transition: transform 0.5s ease, opacity 0.5s ease;
+        }
+        .popup.show {
+            display: block;
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+        .thumbs-up {
+            font-size: 80px;
+            color: #f4a51c;
+            animation: bounce 1s infinite;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-20px);
+            }
+            60% {
+                transform: translateY(-10px);
+            }
+        }
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        .overlay.show {
+            display: block;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">Pr <span style="color: #f4a51c;">Pro-Skills</span></div>
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">About Us</a></li>
+                <li><a href="#">Courses</a></li>
+                <li><a href="#">Reviews</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="form-container">
+        <h2>Enroll Now</h2>
+        <form id="enrollmentForm">
+            <!-- Step 1: Personal Details -->
+            <div class="form-step active">
+                <h3>Personal Details</h3>
+                <input type="text" id="fullName" placeholder="Full Name" required>
+                <input type="email" id="email" placeholder="Email" required>
+                <input type="tel" id="phone" placeholder="Phone Number" required>
+                <input type="date" id="dob" placeholder="Date of Birth" required>
+                <select id="gender" required>
+                    <option value="" disabled selected>Select Gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                </select>
+                <div class="error" id="error1">Please fill in all fields.</div>
+                <button type="button" class="button" id="next1">Next</button>
+            </div>
+
+            <!-- Step 2: Course Details -->
+            <div class="form-step">
+                <h3>Course Details</h3>
+                <select id="course" required>
+                    <option value="" disabled selected>Select Course</option>
+                    <option value="Full Stack Development">Full Stack Development</option>
+                    <option value="JavaScript Essentials">JavaScript Essentials</option>
+                    <option value="HTML & CSS Basics">HTML & CSS Basics</option>
+                </select>
+                <input type="text" id="courseDuration" placeholder="Course Duration" readonly>
+                <input type="text" id="courseFee" placeholder="Course Fee" readonly>
+                <input type="text" id="enrollmentDate" placeholder="Enrollment Date" value="" readonly>
+                <div class="error" id="error2">Please select a course.</div>
+                <button type="button" class="button" id="prev1">Previous</button>
+                <button type="button" class="button" id="next2">Next</button>
+            </div>
+
+            <!-- Step 3: Login Credentials -->
+            <div class="form-step">
+                <h3>Login Credentials (Optional)</h3>
+                <input type="text" id="username" placeholder="Username">
+                <input type="password" id="password" placeholder="Password">
+                <input type="password" id="confirmPassword" placeholder="Confirm Password">
+                <div class="error" id="error3">Please fill in all fields.</div>
+                <div class="error" id="errorPassword">Passwords do not match.</div>
+                <button type="button" class="button" id="prev2">Previous</button>
+                <button type="button" class="button" id="next3">Next</button>
+            </div>
+
+            <!-- Step 4: Payment Details -->
+            <div class="form-step">
+                <h3>Payment Details (Optional)</h3>
+                <select id="paymentMethod">
+                    <option value="" disabled selected>Select Payment Method</option>
+                    <option value="UPI">UPI</option>
+                    <option value="Credit/Debit Card">Credit/Debit Card</option>
+                    <option value="Net Banking">Net Banking</option>
+                </select>
+                <input type="text" id="transactionId" placeholder="Transaction ID" disabled>
+                <button type="button" class="button" id="prev3">Previous</button>
+                <button type="submit" class="button">Submit</button>
+            </div>
+        </form>
+        <div class="confirmation" id="confirmationMessage">Thank you for enrolling! Your submission has been received.</div>
+    </div>
+
+    <!-- Popup and Overlay -->
+    <div class="overlay" id="overlay"></div>
+    <div class="popup" id="popup">
+        <div class="thumbs-up">👍</div>
+        <h3>Enrollment Successful!</h3>
+        <p>Your submission has been received.</p>
+        <button class="button" id="closePopup">Close</button>
+    </div>
+
+    <script>
+        document.getElementById("enrollmentForm").addEventListener("submit", function (event) {
+            event.preventDefault(); // Prevent form submission
+
+            // Confirmation prompt before submission
+            if (confirm("Are you sure you want to submit the form?")) {
+                // Auto-fill course details based on selected course
+                const course = document.getElementById("course").value;
+                let duration = "";
+                let fee = "";
+
+                switch (course) {
+                    case "Full Stack Development":
+                        duration = "6 months";
+                        fee = "$500";
+                        break;
+                    case "JavaScript Essentials":
+                        duration = "3 months";
+                        fee = "$300";
+                        break;
+                    case "HTML & CSS Basics":
+                        duration = "2 months";
+                        fee = "$200";
+                        break;
+                }
+
+                document.getElementById("courseDuration").value = duration;
+                document.getElementById("courseFee").value = fee;
+                document.getElementById("enrollmentDate").value = new Date().toLocaleDateString();
+
+                // Hide the form and show the popup
+                document.querySelector('.form-container').style.display = 'none';
+                document.getElementById("overlay").classList.add('show');
+                document.getElementById("popup").classList.add('show');
+            }
+        });
+
+        // Course selection change event
+        document.getElementById("course").addEventListener("change", function() {
+            const course = this.value;
+            let duration = "";
+            let fee = "";
+
+            switch (course) {
+                case "Full Stack Development":
+                    duration = "6 months";
+                    fee = "$500";
+                    break;
+                case "JavaScript Essentials":
+                    duration = "3 months";
+                    fee = "$300";
+                    break;
+                case "HTML & CSS Basics":
+                    duration = "2 months";
+                    fee = "$200";
+                    break;
+            }
+
+            document.getElementById("courseDuration").value = duration;
+            document.getElementById("courseFee").value = fee;
+            document.getElementById("enrollmentDate").value = new Date().toLocaleDateString();
+        });
+
+        // Navigation between steps
+        let currentStep = 0;
+        const steps = document.querySelectorAll(".form-step");
+        steps[currentStep].classList.add("active");
+
+        document.getElementById("next1").addEventListener("click", function() {
+            if (validateStep1()) {
+                steps[currentStep].classList.remove("active");
+                currentStep++;
+                steps[currentStep].classList.add("active");
+            }
+        });
+
+        document.getElementById("prev1").addEventListener("click", function() {
+            steps[currentStep].classList.remove("active");
+            currentStep--;
+            steps[currentStep].classList.add("active");
+        });
+
+        document.getElementById("next2").addEventListener("click", function() {
+            if (validateStep2()) {
+                steps[currentStep].classList.remove("active");
+                currentStep++;
+                steps[currentStep].classList.add("active");
+            }
+        });
+
+        document.getElementById("prev2").addEventListener("click", function() {
+            steps[currentStep].classList.remove("active");
+            currentStep--;
+            steps[currentStep].classList.add("active");
+        });
+
+        document.getElementById("next3").addEventListener("click", function() {
+            if (validateStep3()) {
+                steps[currentStep].classList.remove("active");
+                currentStep++;
+                steps[currentStep].classList.add("active");
+            }
+        });
+
+        document.getElementById("prev3").addEventListener("click", function() {
+            steps[currentStep].classList.remove("active");
+            currentStep--;
+            steps[currentStep].classList.add("active");
+        });
+
+        // Validation functions
+        function validateStep1() {
+            const fullName = document.getElementById("fullName").value;
+            const email = document.getElementById("email").value;
+            const phone = document.getElementById("phone").value;
+            const dob = document.getElementById("dob").value;
+            const gender = document.getElementById("gender").value;
+
+            if (!fullName || !email || !phone || !dob || !gender) {
+                document.getElementById("error1").style.display = "block";
+                return false;
+            } else {
+                document.getElementById("error1").style.display = "none";
+                return true;
+            }
+        }
+
+        function validateStep2() {
+            const course = document.getElementById("course").value;
+
+            if (!course) {
+                document.getElementById("error2").style.display = "block";
+                return false;
+            } else {
+                document.getElementById("error2").style.display = "none";
+                return true;
+            }
+        }
+
+        function validateStep3() {
+            const password = document.getElementById("password").value;
+            const confirmPassword = document.getElementById("confirmPassword").value;
+
+            if (password !== confirmPassword) {
+                document.getElementById("errorPassword").style.display = "block";
+                return false;
+            } else {
+                document.getElementById("errorPassword").style.display = "none";
+                return true;
+            }
+        }
+
+        // Auto-fill enrollment date on page load
+        document.getElementById("enrollmentDate").value = new Date().toLocaleDateString();
+
+        // Close popup
+        document.getElementById("closePopup").addEventListener("click", function() {
+            document.getElementById("overlay").classList.remove('show');
+            document.getElementById("popup").classList.remove('show');
+            document.querySelector('.form-container').style.display = 'block'; // Optionally reset the form
+        });
+    </script>
+</body>
+</html>
