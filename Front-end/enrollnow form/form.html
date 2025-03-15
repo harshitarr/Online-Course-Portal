@@ -101,19 +101,30 @@
             background-color: #d4931a;
             transform: scale(1.05);
         }
-        .confirmation {
-            display: none;
-            margin-top: 20px;
-            color: #f4a51c;
-            animation: fadeIn 0.5s;
-        }
         .error {
             color: red;
             margin: 10px 0;
             display: none;
         }
-        /* Popup Styles */
-        .popup {
+        /* Overlay Styles */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        .overlay.show {
+            display: block;
+            opacity: 1;
+        }
+        /* Payment Overlay Styles */
+        .payment-overlay {
             display: none;
             position: fixed;
             top: 50%;
@@ -123,46 +134,98 @@
             padding: 30px;
             border-radius: 10px;
             box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
-            z-index: 1000;
+            z-index: 1001;
             opacity: 0;
             transition: transform 0.5s ease, opacity 0.5s ease;
+            width: 90%;
+            max-width: 400px;
         }
-        .popup.show {
+        .payment-overlay.show {
             display: block;
             transform: translate(-50%, -50%) scale(1);
             opacity: 1;
         }
-        .thumbs-up {
-            font-size: 80px;
-            color: #f4a51c;
-            animation: bounce 1s infinite;
-        }
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {
-                transform: translateY(0);
-            }
-            40% {
-                transform: translateY(-20px);
-            }
-            60% {
-                transform: translateY(-10px);
-            }
-        }
-        .overlay {
+        /* Receipt Overlay Styles */
+        .receipt-overlay {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 999;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.5);
+            background: rgba(28, 33, 64, 0.9);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+            z-index: 1001;
             opacity: 0;
-            transition: opacity 0.5s ease;
+            transition: transform 0.5s ease, opacity 0.5s ease;
+            width: 90%;
+            max-width: 600px; /* Increased width for better visibility */
+            max-height: 80%; /* Limit height for scrolling */
+            overflow-y: auto; /* Enable vertical scrolling */
         }
-        .overlay.show {
+        .receipt-overlay.show {
             display: block;
+            transform: translate(-50%, -50%) scale(1);
             opacity: 1;
+        }
+        .receipt-overlay h3 {
+            color: #f4a51c;
+            margin-bottom: 10px;
+            font-size: 24px; /* Increased font size */
+        }
+        #receiptDetails {
+            text-align: left; /* Align text to the left for better readability */
+            font-size: 16px; /* Set a readable font size */
+            white-space: pre-wrap; /* Preserve whitespace for formatting */
+        }
+        #closeReceipt {
+            background-color: #f4a51c;
+            color: #11152b;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        #closeReceipt:hover {
+            background-color: #d4931a;
+        }
+        /* Enrollment Successful Overlay Styles */
+        .success-overlay {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.5);
+            background: rgba(28, 33, 64, 0.9);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+            z-index: 1002;
+            opacity: 0;
+            transition: transform 0.5s ease, opacity 0.5s ease;
+            width: 90%;
+            max-width: 400px;
+        }
+        .success-overlay.show {
+            display: block;
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+        .success-overlay h3 {
+            color: #f4a51c;
+            margin-bottom: 10px;
+        }
+        .success-overlay .tick {
+            font-size: 80px;
+            color: green; /* Change tick color to green */
+            animation: tickAnimation 1s forwards;
+        }
+        @keyframes tickAnimation {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
         }
     </style>
 </head>
@@ -179,7 +242,7 @@
         </nav>
     </header>
 
-    <div class="form-container">
+    <div class="form-container" id="formContainer">
         <h2>Enroll Now</h2>
         <form id="enrollmentForm">
             <!-- Step 1: Personal Details -->
@@ -196,6 +259,7 @@
                     <option value="other">Other</option>
                 </select>
                 <div class="error" id="error1">Please fill in all fields.</div>
+                <div class="error" id="dobError" style="display: none; color: red;">You must be at least 15 years old and cannot select a future date.</div>
                 <button type="button" class="button" id="next1">Next</button>
             </div>
 
@@ -228,67 +292,101 @@
                 <button type="button" class="button" id="next3">Next</button>
             </div>
 
-            <!-- Step 4: Payment Details -->
+            <!-- Step 4: Confirmation -->
             <div class="form-step">
-                <h3>Payment Details (Optional)</h3>
-                <select id="paymentMethod">
-                    <option value="" disabled selected>Select Payment Method</option>
-                    <option value="UPI">UPI</option>
-                    <option value="Credit/Debit Card">Credit/Debit Card</option>
-                    <option value="Net Banking">Net Banking</option>
-                </select>
-                <input type="text" id="transactionId" placeholder="Transaction ID" disabled>
+                <h3>Confirmation</h3>
+                <p>Please review your details before proceeding to payment.</p>
                 <button type="button" class="button" id="prev3">Previous</button>
-                <button type="submit" class="button">Submit</button>
+                <button type="submit" class="button">Pay Now</button>
             </div>
         </form>
-        <div class="confirmation" id="confirmationMessage">Thank you for enrolling! Your submission has been received.</div>
     </div>
 
-    <!-- Popup and Overlay -->
+    <!-- Overlay for Payment Details -->
     <div class="overlay" id="overlay"></div>
-    <div class="popup" id="popup">
-        <div class="thumbs-up">👍</div>
+    <div class="payment-overlay" id="paymentOverlay">
+        <h3>Payment Details</h3>
+        <div class="payment-details">
+            <p><strong>Course:</strong> <span id="paymentCourse"></span></p>
+            <p><strong>Duration:</strong> <span id="paymentDuration"></span></p>
+            <p><strong>Fee:</strong> <span id="paymentFee"></span></p>
+            <p><strong>Enrollment Date:</strong> <span id="paymentDate"></span></p>
+            <label for="paymentMethod">Select Payment Method:</label>
+            <select id="paymentMethod" required>
+                <option value="" disabled selected>Select Payment Method</option>
+                <option value="GPay">GPay</option>
+                <option value="PayPal">PayPal</option>
+                <option value="Credit Card">Credit Card</option>
+            </select>
+        </div>
+        <button class="button" id="confirmPayment">Confirm Payment</button>
+        <button class="button" id="cancelPayment">Cancel</button>
+    </div>
+
+    <!-- Enrollment Successful Overlay -->
+    <div class="success-overlay" id="successOverlay">
         <h3>Enrollment Successful!</h3>
-        <p>Your submission has been received.</p>
-        <button class="button" id="closePopup">Close</button>
+        <div class="tick">✔️</div>
+        <p>Your enrollment has been successfully completed.</p>
+        <button class="button" id="okayButton">Okay</button>
+    </div>
+
+    <!-- Receipt Overlay -->
+    <div class="receipt-overlay" id="receiptOverlay">
+        <h3>Your Receipt</h3>
+        <pre id="receiptDetails" style="color: white;"></pre>
+        <button class="button" id="closeReceipt">Close</button>
     </div>
 
     <script>
+        let receiptData = {}; // Store receipt data
+
         document.getElementById("enrollmentForm").addEventListener("submit", function (event) {
             event.preventDefault(); // Prevent form submission
 
-            // Confirmation prompt before submission
-            if (confirm("Are you sure you want to submit the form?")) {
-                // Auto-fill course details based on selected course
-                const course = document.getElementById("course").value;
-                let duration = "";
-                let fee = "";
+            // Validate date of birth
+            const dob = new Date(document.getElementById("dob").value);
+            const today = new Date();
+            const age = today.getFullYear() - dob.getFullYear();
+            const monthDiff = today.getMonth() - dob.getMonth();
+            const isFutureDate = dob > today;
 
-                switch (course) {
-                    case "Full Stack Development":
-                        duration = "6 months";
-                        fee = "$500";
-                        break;
-                    case "JavaScript Essentials":
-                        duration = "3 months";
-                        fee = "$300";
-                        break;
-                    case "HTML & CSS Basics":
-                        duration = "2 months";
-                        fee = "$200";
-                        break;
-                }
-
-                document.getElementById("courseDuration").value = duration;
-                document.getElementById("courseFee").value = fee;
-                document.getElementById("enrollmentDate").value = new Date().toLocaleDateString();
-
-                // Hide the form and show the popup
-                document.querySelector('.form-container').style.display = 'none';
-                document.getElementById("overlay").classList.add('show');
-                document.getElementById("popup").classList.add('show');
+            if (isFutureDate || age < 15 || (age === 15 && monthDiff < 0)) {
+                document.getElementById("dobError").style.display = "block";
+                return;
+            } else {
+                document.getElementById("dobError").style.display = "none";
             }
+
+            // Auto-fill course details based on selected course
+            const course = document.getElementById("course").value;
+            let duration = "";
+            let fee = "";
+
+            switch (course) {
+                case "Full Stack Development":
+                    duration = "6 months";
+                    fee = "$500";
+                    break;
+                case "JavaScript Essentials":
+                    duration = "3 months";
+                    fee = "$300";
+                    break;
+                case "HTML & CSS Basics":
+                    duration = "2 months";
+                    fee = "$200";
+                    break;
+            }
+
+            // Set payment details in the overlay
+            document.getElementById("paymentCourse").innerText = course;
+            document.getElementById("paymentDuration").innerText = duration;
+            document.getElementById("paymentFee").innerText = fee;
+            document.getElementById("paymentDate").innerText = new Date().toLocaleDateString();
+
+            // Show the payment overlay
+            document.getElementById("overlay").classList.add('show');
+            document.getElementById("paymentOverlay").classList.add('show');
         });
 
         // Course selection change event
@@ -323,6 +421,20 @@
         steps[currentStep].classList.add("active");
 
         document.getElementById("next1").addEventListener("click", function() {
+            // Validate date of birth before proceeding
+            const dob = new Date(document.getElementById("dob").value);
+            const today = new Date();
+            const age = today.getFullYear() - dob.getFullYear();
+            const monthDiff = today.getMonth() - dob.getMonth();
+            const isFutureDate = dob > today;
+
+            if (isFutureDate || age < 15 || (age === 15 && monthDiff < 0)) {
+                document.getElementById("dobError").style.display = "block";
+                return; // Prevent moving to the next step
+            } else {
+                document.getElementById("dobError").style.display = "none";
+            }
+
             if (validateStep1()) {
                 steps[currentStep].classList.remove("active");
                 currentStep++;
@@ -409,11 +521,69 @@
         // Auto-fill enrollment date on page load
         document.getElementById("enrollmentDate").value = new Date().toLocaleDateString();
 
-        // Close popup
-        document.getElementById("closePopup").addEventListener("click", function() {
+        // Confirm Payment
+        document.getElementById("confirmPayment").addEventListener("click", function() {
+            const paymentMethod = document.getElementById("paymentMethod").value;
+            if (!paymentMethod) {
+                // Show warning overlay if no payment method is selected
+                alert("Please select a payment method before confirming payment.");
+            } else {
+                // Simulate saving the form data as a receipt
+                receiptData = {
+                    fullName: document.getElementById("fullName").value,
+                    email: document.getElementById("email").value,
+                    phone: document.getElementById("phone").value,
+                    dob: document.getElementById("dob").value,
+                    gender: document.getElementById("gender").value,
+                    course: document.getElementById("course").value,
+                    duration: document.getElementById("courseDuration").value,
+                    fee: document.getElementById("courseFee").value,
+                    enrollmentDate: document.getElementById("enrollmentDate").value,
+                    username: document.getElementById("username").value,
+                    paymentMethod: paymentMethod
+                };
+
+                // Hide the enrollment form
+                document.getElementById("formContainer").style.display = 'none';
+
+                // Show the success overlay
+                document.getElementById("successOverlay").classList.add('show');
+            }
+        });
+
+        // Okay button in success overlay
+        document.getElementById("okayButton").addEventListener("click", function() {
+            // Hide the success overlay
+            document.getElementById("successOverlay").classList.remove('show');
+
+            // Show the receipt overlay
+            const receiptDetails = `
+                Full Name: ${receiptData.fullName}
+                Email: ${receiptData.email}
+                Phone: ${receiptData.phone}
+                Date of Birth: ${receiptData.dob}
+                Gender: ${receiptData.gender}
+                Course: ${receiptData.course}
+                Duration: ${receiptData.duration}
+                Fee: ${receiptData.fee}
+                Enrollment Date: ${receiptData.enrollmentDate}
+                Username: ${receiptData.username}
+                Payment Method: ${receiptData.paymentMethod}
+            `;
+            document.getElementById("receiptDetails").innerText = receiptDetails;
+            document.getElementById("receiptOverlay").classList.add('show');
+        });
+
+        // Cancel Payment
+        document.getElementById("cancelPayment").addEventListener("click", function() {
             document.getElementById("overlay").classList.remove('show');
-            document.getElementById("popup").classList.remove('show');
-            document.querySelector('.form-container').style.display = 'block'; // Optionally reset the form
+            document.getElementById("paymentOverlay").classList.remove('show');
+        });
+
+        // Close Receipt Overlay
+        document.getElementById("closeReceipt").addEventListener("click", function() {
+            document.getElementById("receiptOverlay").classList.remove('show');
+            location.reload(); // Optionally reload the page to reset the form
         });
     </script>
 </body>
