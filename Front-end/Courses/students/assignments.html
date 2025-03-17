@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Details</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #0c0f1a;
+            color: #ffffff;
+            text-align: center;
+        }
+        header {
+            background: #11152b;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #f4a51c;
+        }
+        nav ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+        }
+        nav ul li {
+            margin: 0 20px;
+        }
+        nav ul li a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        nav ul li a:hover {
+            color: #f4a51c;
+        }
+        .hero {
+            padding: 100px 20px;
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.3)), url('images/banner.png') no-repeat center center/cover;
+            color: #ffffff;
+        }
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .hero h1 {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+        }
+        .cta-button {
+            display: inline-block;
+            padding: 12px 25px;
+            background-color: #f4a51c;
+            color: #11152b;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .cta-button:hover {
+            background-color: #d4931a;
+            transform: translateY(-2px);
+        }
+        .course-details {
+            padding: 40px 20px;
+            background: #1c2140;
+            border-radius: 10px;
+            margin: 20px auto;
+            max-width: 1200px;
+        }
+        .subjects-list, .submissions-list {
+            list-style-type: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .subject-item, .submission-item, .assignment-item {
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            width: 300px;
+            border-radius: 10px;
+            text-align: left;
+            margin: 15px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            color: #ffffff;
+        }
+        .submission-item:nth-child(4n+1) { background: #ef4444; }
+        .submission-item:nth-child(4n+2) { background: #f4a51c; }
+        .submission-item:nth-child(4n+3) { background: #10b981; }
+        .submission-item:nth-child(4n+4) { background: #3b82f6; }
+        .subject-item:hover, .submission-item:hover, .assignment-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4);
+        }
+        .assignments-section {
+            margin: 40px 0;
+        }
+        .assignments-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .assignment-item {
+            width: 350px;
+            position: relative;
+            overflow: hidden;
+        }
+        .assignment-item:nth-child(4n+1) { background: #ef4444; }
+        .assignment-item:nth-child(4n+2) { background: #f4a51c; }
+        .assignment-item:nth-child(4n+3) { background: #10b981; }
+        .assignment-item:nth-child(4n+4) { background: #3b82f6; }
+        .assignment-item h3 {
+            margin: 10px 0;
+            font-size: 22px;
+        }
+        .assignment-item p {
+            margin: 5px 0;
+        }
+        .assignment-item .due-date, .assignment-item .max-marks {
+            font-weight: bold;
+        }
+        .assignment-item .details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-in-out, opacity 0.4s ease-in-out;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 0 15px;
+            border-radius: 5px;
+            opacity: 0;
+        }
+        .assignment-item.active .details {
+            max-height: 200px;
+            opacity: 1;
+            padding: 10px 15px;
+        }
+        .arrow {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-bottom: 10px solid white;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .assignment-item.active .arrow {
+            transform: rotate(180deg);
+        }
+        .image-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 150px;
+            overflow: hidden;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+        }
+        .reviews-container {
+            display: flex;
+            flex-wrap: nowrap;
+            overflow: hidden;
+            position: relative;
+            width: 100%;
+            animation: slide 20s linear infinite;
+        }
+        .review-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 320px;
+            text-align: center;
+            margin: 0 10px;
+            flex-shrink: 0; /* Prevent shrinking */
+        }
+        .review-header {
+            background: #6c63ff;
+            color: white;
+            border-radius: 12px 12px 0 0;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            position: relative;
+        }
+        .profile-pic {
+            width: 50px;
+            height: 50px;
+            background: white;
+            color: #6c63ff;
+            font-size: 22px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            text-transform: uppercase;
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 3px solid #6c63ff;
+        }
+        .stars {
+            display: flex;
+            gap: 3px;
+            justify-content: center;
+        }
+        .star {
+            color: gold;
+            font-size: 18px;
+        }
+        .review-form {
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            max-width: 450px;
+            margin: 40px auto;
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+        .review-form h2 {
+            font-size: 22px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .review-form p {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        .emoji-rating {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .emoji {
+            font-size: 30px;
+            cursor: pointer;
+            transition: transform 0.3s ease-in-out;
+        }
+        .emoji:hover,
+        .emoji.selected {
+            transform: scale(1.3);
+        }
+        textarea {
+            width: 420px;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            resize: none;
+            background: #f8f8f8;
+        }
+        .submit-button {
+            background: #5b2be4;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+            transition: background 0.3s ease-in-out;
+        }
+        .submit-button:hover {
+            background: #6c63ff;
+        }
+
+        @keyframes slide {
+            from { transform: translateX(0); }
+            to { transform: translateX(-100%); }
+        }
+
+        .subject-item a {
+            color: white; /* Change hyperlink color to white */
+            text-decoration: none; /* Remove underline from hyperlinks */
+        }
+
+        .subject-item a:hover {
+            text-decoration: underline; /* Optional: Add underline on hover */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">Pr <span style="color: #f4a51c;">Pro-Skills</span></div>
+        <nav>
+            <ul>
+                <li><a href="homepg.php">Home</a></li>
+                <li><a href="about.php">About Us</a></li>
+                <li><a href="#">Courses</a></li>
+                <li><a href="forums.php">Forums</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Course Name Here</h1>
+            <img src="path/to/course/image.jpg" alt="Course Name Here" style="max-width: 100%; height: auto; border-radius: 10px;">
+            <p><strong>Description:</strong> Course description goes here.</p>
+            <p><strong>Price:</strong> $Course Price Here</p>
+            <p><strong>Duration:</strong> Course Duration Here</p>
+            <a href="enroll.php?course=Course%20Name%20Here" class="cta-button">Enroll Now</a>
+        </div>
+    </section>
+
+    <div class="course-details">
+        <h2>Subjects</h2>
+        <ul class="subjects-list">
+            <li class="subject-item">
+                <a href="get_lessons.php?subject_id=1&course=Course%20Name%20Here">
+                    <h3>Subject Name Here</h3>
+                    <p>Subject description goes here.</p>
+                    <div class="image-container">
+                        <img src="path/to/subject/image.jpg" alt="Subject Name Here">
+                    </div>
+                </a>
+            </li>
+            <!-- Repeat for other subjects -->
+        </ul>
+    </div>
+
+    <div class="assignments-section">
+        <h2>Assignments</h2>
+        <ul class="assignments-list">
+            <li class="assignment-item">
+                <div class="arrow" onclick="toggleDetails(this)"></div>
+                <h3>Assignment Title Here</h3>
+                <p class="due-date">Due Date: <span>2023-12-01</span></p>
+                <p class="max-marks">Max Marks: <span>100</span></p>
+                <div class="details">
+                    <p>Assignment description goes here. This is where you can provide additional details about the assignment.</p>
+                </div>
+            </li>
+            <li class="assignment-item">
+                <div class="arrow" onclick="toggleDetails(this)"></div>
+                <h3>Assignment Title Here</h3>
+                <p class="due-date">Due Date: <span>2023-12-15</span></p>
+                <p class="max-marks">Max Marks: <span>50</span></p>
+                <div class="details">
+                    <p>Assignment description goes here. This is where you can provide additional details about the assignment.</p>
+                </div>
+            </li>
+            <li class="assignment-item">
+                <div class="arrow" onclick="toggleDetails(this)"></div>
+                <h3>Assignment Title Here</h3>
+                <p class="due-date">Due Date: <span>2023-12-20</span></p>
+                <p class="max-marks">Max Marks: <span>75</span></p>
+                <div class="details">
+                    <p>Assignment description goes here. This is where you can provide additional details about the assignment.</p>
+                </div>
+            </li>
+            <li class="assignment-item">
+                <div class="arrow" onclick="toggleDetails(this)"></div>
+                <h3>Assignment Title Here</h3>
+                <p class="due-date">Due Date: <span>2023-12-25</span></p>
+                <p class="max-marks">Max Marks: <span>100</span></p>
+                <div class="details">
+                    <p>Assignment description goes here. This is where you can provide additional details about the assignment.</p>
+                </div>
+            </li>
+            <!-- Repeat for other assignments -->
+        </ul>
+    </div>
+
+    <h2>What Our Customers Are Saying</h2>
+    <div class="reviews-container">
+        <div class="review-card">
+            <div class="review-header">
+                <div class="profile-pic">A</div>
+                <div>
+                    <h3>Alex Brinkman</h3>
+                    <div class="stars">★★★★★</div>
+                </div>
+            </div>
+            <p style="color:#6c63ff">Great experience! Will definitely recommend.</p>
+        </div>
+        <div class="review-card">
+            <div class="review-header">
+                <div class="profile-pic">C</div>
+                <div>
+                    <h3>Charlie McCharles</h3>
+                    <div class="stars">★★★★☆</div>
+                </div>
+            </div>
+            <p style="color:#6c63ff">Very good service, just a few minor issues.</p>
+        </div>
+        <div class="review-card">
+            <div class="review-header">
+                <div class="profile-pic">S</div>
+                <div>
+                    <h3>Sarah Donaldson</h3>
+                    <div class="stars">★★★★★</div>
+                </div>
+            </div>
+            <p style="color:#6c63ff">Exceptional quality and customer support!</p>
+        </div>
+        <div class="review-card">
+            <div class="review-header">
+                <div class="profile-pic">J</div>
+                <div>
+                    <h3>John Doe</h3>
+                    <div class="stars">★★★★☆</div>
+                </div>
+            </div>
+            <p style="color:#6c63ff">Good course content, but the pace was a bit fast for me.</p>
+        </div>
+        <div class="review-card">
+            <div class="review-header">
+                <div class="profile-pic">M</div>
+                <div>
+                    <h3>Mary Smith</h3>
+                    <div class="stars">★★★★★</div>
+                </div>
+            </div>
+            <p style="color:#6c63ff">Absolutely loved the course! Learned so much.</p>
+        </div>
+    </div>
+
+    <div class="review-form">
+        <h2>Rate us!</h2>
+        <p>Your input helps us improve our service.</p>
+    
+        <div class="emoji-rating">
+            <span class="emoji" onclick="selectEmoji(this)">😡</span>
+            <span class="emoji" onclick="selectEmoji(this)">☹️</span>
+            <span class="emoji" onclick="selectEmoji(this)">😐</span>
+            <span class="emoji" onclick="selectEmoji(this)">🙂</span>
+            <span class="emoji" onclick="selectEmoji(this)">😃</span>
+        </div>
+    
+        <textarea placeholder="Add a comment..."></textarea>
+    
+        <button class="submit-button">Send now</button>
+    </div>
+    
+    <script>
+        function selectEmoji(element) {
+            document.querySelectorAll('.emoji').forEach(emoji => emoji.classList.remove('selected'));
+            element.classList.add('selected');
+        }
+
+        function toggleDetails(arrow) {
+            const assignmentItem = arrow.closest('.assignment-item') || arrow.closest('.submission-item');
+            assignmentItem.classList.toggle('active');
+
+            const details = assignmentItem.querySelector('.details');
+            if (details.style.maxHeight) {
+                details.style.maxHeight = null;
+                details.style.opacity = 0;
+            } else {
+                details.style.maxHeight = details.scrollHeight + "px";
+                details.style.opacity = 1;
+            }
+        }
+    </script>
+
+    <h2>Submissions</h2>
+    <ul class="submissions-list">
+        <li class="submission-item">
+            <div class="arrow" onclick="toggleDetails(this)"></div>
+            <h3 style="font-size: 25px;">Submission Title Here</h3>
+            <p class="submission-date">Submission Date: <span>2023-12-01</span></p>
+            <p class="submission-file">File Path: <a href="path/to/submission/file" target="_blank" style="color: white;">View Submission</a></p>
+            <div class="details">
+                <p>Submission details go here. This is where you can provide additional information about the submission.</p>
+            </div>
+        </li>
+        <li class="submission-item">
+            <div class="arrow" onclick="toggleDetails(this)"></div>
+            <h3 style="font-size: 25px;">Submission Title Here</h3>
+            <p class="submission-date">Submission Date: <span>2023-12-15</span></p>
+            <p class="submission-file">File Path: <a href="path/to/submission/file" target="_blank" style="color: white;">View Submission</a></p>
+            <div class="details">
+                <p>Submission details go here. This is where you can provide additional information about the submission.</p>
+            </div>
+        </li>
+        <!-- Repeat for other submissions -->
+    </ul>
+</body>
+</html>
